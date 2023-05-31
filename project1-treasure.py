@@ -26,8 +26,22 @@ import colordict as colors
 
 matmon = ' TREASURE '
 
-def check_top10(hits, filename):
+def print_ranking(ranking, maxrank):
+    '''Print ranking in a nice colorful table with centering of names and scores'''
+    sep = '+' + ('-'*54) + '+'
+    whonbl = colors.clrs['BLUE']['B'] + colors.clrs['WHITE']['F']
+    blonwh = colors.clrs['BLUE']['F'] + colors.clrs['WHITE']['B']
+    redonwh= colors.clrs['RED' ]['F'] + colors.clrs['WHITE']['B']
+    print('\n' + sep + f'\n|{f"{whonbl}Current Top {maxrank} Ranking{colors.clr_reset}":^74}|\n' + sep)
+    for i, rank in enumerate(ranking):
+        print(f'| {i+1:>2} -> |{blonwh}{rank["name"]:^20}{colors.clr_reset}| did it in |{redonwh}{rank["hits"]:^5}{colors.clr_reset}| hits! |')
+    print(sep)
 
+def check_top_x(hits, filename):
+    '''Check ranking file with Top X best results. Default for X is 5, set in json (can be changed after creation)
+    JSON file is sorted from best to worst result (by lowest number of hits to guess)
+    After check, if user ranks among the X best, its name will be asked and if provided, added to the ranking file.
+    In any case, ranking table is printed on screen after checks are done'''
     try:
         with open(filename, 'r+') as file:
             data       = json.load(file)
@@ -53,21 +67,18 @@ def check_top10(hits, filename):
                 json.dump(data, file)
         else:
             print(f'This result will not be added to Top {maxrank} list!')
-
+    
     # print current ranking table in a nice table presentation
-    sep = '+' + ('-'*54) + '+'
-    blonwh = colors.clrs['BLUE']['B'] + colors.clrs['WHITE']['F']
-    print('\n' + sep + f'\n|{f"{blonwh}Current Top {maxrank} Ranking{colors.clr_reset}":^74}|\n' + sep)
-    [print(f'| {i+1:>2} -> [{rank["name"]:^20}] did it in [{rank["hits"]:^5}] hits! |') for i, rank in enumerate(top_ranked)]
-    print(sep)
+    print_ranking(top_ranked, maxrank)
 
-def create_treasure(filename): 
+def create_treasure(filename):
+    '''Creates *TREASURE* file with variable groups of same numbers in ascending and descending order, surrounding the word Treasure '''
     try:
         print(f'*** Creating file: "{filename}" ***\n')
         with open(filename, 'w') as file:
             [ file.write(str(i) * random.randint(1, 20)) for i in range(10) ] # write groups of a number from 0 to 9 repeated a random number of times up to 20
             file.write(matmon) # write treasure
-            [ file.write(str(i) * random.randint(1, 20)) for i in range(9,-1,-1) ]  # write groups of a number from 9 to 0 repeated a random number of times up to 20
+            [ file.write(str(i) * random.randint(1, 20)) for i in range(9,-1,-1) ] # write groups of a number from 9 to 0 repeated a random number of times up to 20
             file.write('\n')
         return True
     except (OSError):
@@ -75,17 +86,18 @@ def create_treasure(filename):
         return False
 
 def open_treasure(filename):
+    '''Open the generated treasure file and read it in a full string, which is returned as a playfield'''
     try:
         print(f'*** Reading file: "{filename}" ***\n')
         with open(filename, 'r') as file:
-            field = file.read() # read the whole file as a string
-        return field
+            playfield = file.read() # read the whole file as a string
+        return playfield
     except (OSError):
         print(f'*** Error while trying to read file: "{filename}"')
         return None
     
 treasure_file_def = 'treasure.txt'
-treasure_file = input(f'Enter name of file ('+colors.clrs["RED"]["F"]+f'[Enter] for default name "{treasure_file_def}"'+colors.clr_reset+') : ')
+treasure_file = input('Enter name of file ('+colors.clrs["RED"]["F"]+f'[Enter] for default name "{treasure_file_def}"'+colors.clr_reset+') : ')
 treasure_file = treasure_file if treasure_file else treasure_file_def
     
 playfield = ''
@@ -102,7 +114,9 @@ if create_treasure(treasure_file):
             tries += 1
             position = max(min(position + steps, len(playfield)-2), 0)
             if playfield[position] in list(matmon):
-                print('\n' + '*'*50 + f'\nFound it! You have hit the letter "{playfield[position]}" in {tries} tries!\n' + '*'*50)
+                whongr = colors.clrs['WHITE' ]['F'] + colors.clrs['GREEN']['B']
+                print('\n' + whongr + '*'*50 + f'\nFound it! You have hit the letter "{playfield[position]}" in {tries:2} tries!' + colors.clr_reset)
+                print(whongr + '*'*50 + colors.clr_reset)
                 break
             else:
                 print(f'Hit "{playfield[position]}"')
@@ -110,4 +124,4 @@ if create_treasure(treasure_file):
             print('Error: not a number')
             continue
 
-    check_top10(tries, 'top10.json')
+    check_top_x(tries, 'ranking.json')
