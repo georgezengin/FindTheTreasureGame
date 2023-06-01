@@ -115,7 +115,7 @@ if create_treasure(treasure_file):
             position = max(min(position + steps, len(playfield)-2), 0)
             if playfield[position] in list(matmon):
                 whongr = colors.fwhite + colors.bgreen
-                print('\n' + whongr + '*'*50 + f'\nFound it! You have hit the letter "{playfield[position]}" in {tries:2} tries!' + colors.clr_reset)
+                print('\n' + whongr + '*'*50 + f'\nFound it! You have hit the letter "{playfield[position]}" in {tries:2} tries!' + colors.freset+colors.breset)
                 print(whongr + '*'*50 + colors.clr_reset)
                 break
             else:
