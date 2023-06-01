@@ -108,7 +108,7 @@ if create_treasure(treasure_file):
 
     position = 0
     tries = 0
-    while playfield and True:
+    while True:
         try:
             steps = int(input(f'Enter number of steps ({colors.fgreen}Positive-Move Fwd, {colors.fred}Negative-Move Backwards): {colors.clrs["RESET"]["F"]}'))
             tries += 1
