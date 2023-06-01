@@ -72,7 +72,7 @@ def check_top_x(hits, filename):
     print_ranking(top_ranked, maxrank)
 
 def create_treasure(filename):
-    '''Creates *TREASURE* file with variable groups of same numbers in ascending and descending order, surrounding the word Treasure '''
+    '''Creates *TREASURE* file with variable groups of same numbers in ascending and descending order, surrounding the word TREASURE '''
     try:
         print(f'*** Creating file: "{filename}" ***\n')
         with open(filename, 'w') as file:
@@ -97,7 +97,7 @@ def open_treasure(filename):
         return None
     
 treasure_file_def = 'treasure.txt'
-treasure_file = input('Enter name of file ('+colors.clrs["RED"]["F"]+f'[Enter] for default name "{treasure_file_def}"'+colors.clr_reset+') : ')
+treasure_file = input('Enter name of file ('+colors.fred+f'[Enter] for default name "{treasure_file_def}"'+colors.clr_reset+') : ')
 treasure_file = treasure_file if treasure_file else treasure_file_def
     
 playfield = ''
@@ -110,11 +110,11 @@ if create_treasure(treasure_file):
     tries = 0
     while playfield and True:
         try:
-            steps = int(input(f'Enter number of steps ({colors.clrs["GREEN"]["F"]}Positive-Move Fwd, {colors.clrs["RED"]["F"]}Negative-Move Backwards): {colors.clrs["RESET"]["F"]}'))
+            steps = int(input(f'Enter number of steps ({colors.fgreen}Positive-Move Fwd, {colors.fred}Negative-Move Backwards): {colors.clrs["RESET"]["F"]}'))
             tries += 1
             position = max(min(position + steps, len(playfield)-2), 0)
             if playfield[position] in list(matmon):
-                whongr = colors.clrs['WHITE' ]['F'] + colors.clrs['GREEN']['B']
+                whongr = colors.fwhite + colors.bgreen
                 print('\n' + whongr + '*'*50 + f'\nFound it! You have hit the letter "{playfield[position]}" in {tries:2} tries!' + colors.clr_reset)
                 print(whongr + '*'*50 + colors.clr_reset)
                 break
