@@ -60,7 +60,8 @@ def check_top_x(hits, filename):
         name = input(f"You're in the top {maxrank}! What is your name? ")
         if name:
             top_ranked.append({ 'name': name, 'hits': hits })
-            top_ranked = sorted(top_ranked, key=lambda x: (str(x['hits'])+x['name']).strip(), reverse=False)[:maxrank]
+#            top_ranked = sorted(top_ranked, key=lambda x: ('  '+str(x['hits'])[::-3]+x['name']), reverse=False)[:maxrank]
+            top_ranked = sorted(top_ranked, key=lambda x: x['hits'], reverse=False)[:maxrank]
             data = { 'max_rank' : maxrank, 'top_ranked' : top_ranked }
 
             with open(filename, 'w') as file:
